@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_TIMEZONE=America/Guatemala
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.rulen8n-prefix.stripprefix.prefixes=/my_n8n"
+      - "traefik.http.routers.rulen8n.middlewares=rulen8n-prefix"
+      - "traefik.http.routers.rulen8n.rule=Host(`variedades-jireh.ddns.net`) && PathPrefix(`/my_n8n`)"
+      - "traefik.http.routers.rulen8n.entrypoints=websecure" # changed
+      - "traefik.http.routers.rulen8n.tls=true"
+      - "traefik.http.routers.rulen8n.tls.certresolver=lets-encrypt" # new
+      - "traefik.http.services.rulen8n.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true  
