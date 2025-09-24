@@ -5,8 +5,8 @@ services:
     image: n8nio/n8n:latest
     container_name: n8n
     restart: always
-    ports:
-      - "5678:5678"
+    #ports:
+    #  - "5678:5678"
     volumes:
       - ./n8n_data:/home/node/.n8n
     environment:
@@ -24,7 +24,7 @@ services:
       - "traefik.http.routers.rulen8n.entrypoints=websecure" # changed
       - "traefik.http.routers.rulen8n.tls=true"
       - "traefik.http.routers.rulen8n.tls.certresolver=lets-encrypt" # new
-      - "traefik.http.services.rulen8n.loadbalancer.server.port=80"
+      - "traefik.http.services.rulen8n.loadbalancer.server.port=5678"
 
 networks:
   proxy:
